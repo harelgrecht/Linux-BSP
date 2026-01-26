@@ -7,6 +7,7 @@
 RealTimePatch/patch-6.12.28-rt10.patch.gz
 ZynqBSP/zynqUbuntu/VivadoZynqUbuntu
 
-
+ZynqMpBSP/kriaBSP/
 ZynqMpBSP/kriaBSP/KriaDocs
 ZynqMpBSP/kriaBSP/KriaBSP.bsp
+Guides/emmc_program.md
