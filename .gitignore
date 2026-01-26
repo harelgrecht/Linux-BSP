@@ -1,0 +1,12 @@
+*.img
+*.img.gz
+*.iso
+*.wic
+*.sdcard
+
+RealTimePatch/patch-6.12.28-rt10.patch.gz
+ZynqBSP/zynqUbuntu/VivadoZynqUbuntu
+
+
+ZynqMpBSP/kriaBSP/KriaDocs
+ZynqMpBSP/kriaBSP/KriaBSP.bsp

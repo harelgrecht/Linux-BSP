@@ -1,0 +1,5 @@
+/include/ "system-conf.dtsi"
+
+&axi_gpio_0 {
+    compatible = "<owner>,customgpio";
+};

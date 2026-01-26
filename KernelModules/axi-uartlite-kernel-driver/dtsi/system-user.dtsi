@@ -1,0 +1,11 @@
+/include/ "system-conf.dtsi"
+
+&axi_uartlite_0 {
+    compatible = "harel,customuart";
+};
+
+/* 
+&device_node {
+    compatible(driver) = "<owner>,<driver_name>"
+};
+*/

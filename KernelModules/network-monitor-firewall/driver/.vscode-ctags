@@ -1,0 +1,57 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/harel/Desktop/Projects/kr260-linux-roadmap/network-monitor-firewall/driver/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	//
+ACTION_ADD	netmonfw.h	/^#define ACTION_ADD /;"	d
+ACTION_MAX_LEN	netmonfw.h	/^#define ACTION_MAX_LEN /;"	d
+ACTION_REMOVE	netmonfw.h	/^#define ACTION_REMOVE /;"	d
+DIRECTION_MAX_LEN	netmonfw.h	/^#define DIRECTION_MAX_LEN /;"	d
+FILTER_BOTH	netmonfw.h	/^    FILTER_BOTH,$/;"	e	enum:NetMonDirection
+FILTER_DEST	netmonfw.h	/^    FILTER_DEST,$/;"	e	enum:NetMonDirection
+FILTER_INVALID	netmonfw.h	/^    FILTER_INVALID = -1,$/;"	e	enum:NetMonDirection
+FILTER_SOURCE	netmonfw.h	/^    FILTER_SOURCE,$/;"	e	enum:NetMonDirection
+IFACE_MAX_LEN	netmonfw.h	/^#define IFACE_MAX_LEN /;"	d
+LINUX_PERMISSIONS	netmonfw.h	/^#define LINUX_PERMISSIONS /;"	d
+NETMONFW_H	netmonfw.h	/^#define NETMONFW_H$/;"	d
+NETMONFW_OK	netmonfw.h	/^#define NETMONFW_OK /;"	d
+NetMonDirection	netmonfw.h	/^enum NetMonDirection {$/;"	g
+NetMonRule	netmonfw.h	/^struct NetMonRule {$/;"	s
+PROCFS_NAME	netmonfw.h	/^#define PROCFS_NAME /;"	d
+ParseIpValue	netmonfw.c	/^static int ParseIpValue(const char *value, __be32 *outIp) {$/;"	f	typeref:typename:int	file:
+ParsePortValue	netmonfw.c	/^static int ParsePortValue(const char *value, int *outPort) {$/;"	f	typeref:typename:int	file:
+RULE_IP	netmonfw.h	/^#define RULE_IP /;"	d
+RULE_MAC	netmonfw.h	/^#define RULE_MAC /;"	d
+RULE_PORT	netmonfw.h	/^#define RULE_PORT /;"	d
+TYPE_MAX_LEN	netmonfw.h	/^#define TYPE_MAX_LEN /;"	d
+VALUE_MAX_LEN	netmonfw.h	/^#define VALUE_MAX_LEN /;"	d
+WORD_SIZE_BYTE	netmonfw.h	/^#define WORD_SIZE_BYTE /;"	d
+checkIpFilter	netmonfw.c	/^static bool checkIpFilter(struct NetMonRule *rule, __be32 sourceIp, __be32 destIp) {$/;"	f	typeref:typename:bool	file:
+checkPortFilter	netmonfw.c	/^static bool checkPortFilter(struct NetMonRule *rule, int sourcePort, int destPort) {$/;"	f	typeref:typename:bool	file:
+direction	netmonfw.h	/^    enum NetMonDirection direction;$/;"	m	struct:NetMonRule	typeref:enum:NetMonDirection
+directionFromString	netmonfw.c	/^enum NetMonDirection directionFromString(char direction[DIRECTION_MAX_LEN]) {$/;"	f	typeref:enum:NetMonDirection
+fillBaseRuleFieldes	netmonfw.c	/^static int fillBaseRuleFieldes(struct NetMonRule* rule, const char* interface, const char* type,/;"	f	typeref:typename:int	file:
+gNetMonHookOps	netmonfw.c	/^static struct nf_hook_ops gNetMonHookOps; \/\/ netfilter operations$/;"	v	typeref:struct:nf_hook_ops	file:
+gNetMonProcFile	netmonfw.c	/^static struct proc_dir_entry *gNetMonProcFile; \/\/ \/proc entry$/;"	v	typeref:struct:proc_dir_entry *	file:
+gNetMonProcOps	netmonfw.c	/^static const struct proc_ops gNetMonProcOps = {$/;"	v	typeref:typename:const struct proc_ops	file:
+interface	netmonfw.h	/^    char interface[16]; \/\/ eth0\/eth1$/;"	m	struct:NetMonRule	typeref:typename:char[16]
+ipAddr	netmonfw.h	/^    __be32 ipAddr; \/\/big endian$/;"	m	struct:NetMonRule	typeref:typename:__be32
+isMatchingRuleForRemoval	netmonfw.c	/^static bool isMatchingRuleForRemoval(struct NetMonRule *rule, const char *type, int portNumber, /;"	f	typeref:typename:bool	file:
+list	netmonfw.h	/^    struct list_head list; \/\/ linked list where each cell holes one specifc rule$/;"	m	struct:NetMonRule	typeref:struct:list_head
+netMonExit	netmonfw.c	/^static void __exit netMonExit(void) {$/;"	f	typeref:typename:void __exit	file:
+netMonHandleAddRule	netmonfw.c	/^static int netMonHandleAddRule(char interface[IFACE_MAX_LEN], char type[TYPE_MAX_LEN], char dire/;"	f	typeref:typename:int	file:
+netMonHandleRemoveRule	netmonfw.c	/^static int netMonHandleRemoveRule(char interface[IFACE_MAX_LEN], char type[TYPE_MAX_LEN], char d/;"	f	typeref:typename:int	file:
+netMonInit	netmonfw.c	/^static int __init netMonInit(void) {$/;"	f	typeref:typename:int __init	file:
+netMonPacketHook	netmonfw.c	/^unsigned int netMonPacketHook(void *priv, struct sk_buff *skb, const struct nf_hook_state *state/;"	f	typeref:typename:unsigned int
+netMonProcWrite	netmonfw.c	/^static ssize_t netMonProcWrite(struct file *file, const char __user *buffer, size_t count, loff_/;"	f	typeref:typename:ssize_t	file:
+parseAddRuleValue	netmonfw.c	/^static int parseAddRuleValue(struct NetMonRule* rule, char value[VALUE_MAX_LEN]) {$/;"	f	typeref:typename:int	file:
+parseRemoveRuleValue	netmonfw.c	/^static int parseRemoveRuleValue(const char *type, const char *value, int *portNumber, __be32 *ip/;"	f	typeref:typename:int	file:
+portNumber	netmonfw.h	/^    int portNumber;$/;"	m	struct:NetMonRule	typeref:typename:int
+ruleExist	netmonfw.c	/^static bool ruleExist(struct NetMonRule* rule, char searchInterface[IFACE_MAX_LEN], enum NetMonD/;"	f	typeref:typename:bool	file:
+type	netmonfw.h	/^    char type[16]; \/\/ ip, port, ...$/;"	m	struct:NetMonRule	typeref:typename:char[16]
