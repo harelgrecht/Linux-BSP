@@ -1,23 +1,37 @@
-# 🚀 Kria KR260 Linux Kernel Development Roadmap
+# Hi there, I'm Harel! 👋
+🚀 **Embedded Linux Developer** | Board Support Packages (BSP) | Kernel Modules
 
-Welcome! This repo tracks my personal journey to become a Linux kernel and embedded software developer using the Kria KR260 platform and PetaLinux. Each project builds on the previous one, from basic system setup to writing custom drivers and real-time networking features.
+I specialize in bringing hardware to life using **Embedded Linux**. My work ranges from building custom Yocto/PetaLinux distributions to writing kernel drivers and real-time userspace applications.
 
 ---
 
-## 🧭 Project Roadmap
+## 🐧 Linux BSP & Infrastructure
+*Core infrastructure projects for Zynq-7000 and Kria SOM platforms.*
 
-| ✅ Status | Project | Description |
-|----------|---------|-------------|
-| ✅ DONE | [PetaLinux Setup](https://github.com/harelgrecht/kr260-linux-roadmap) | Built and booted a custom PetaLinux image for the KR260. Learned SD boot flow, kernel config, DTS overlays. |
-| ✅ DONE | [Ethernet Packet Processor](https://github.com/harelgrecht/Ethernet-Packet-Processor) | Multithreaded user-space app capturing packets, custom process them, and resending via Ethernet over UDP. |
-| ✅ DONE | [Ethernet 1588 Parser](https://github.com/harelgrecht/Ethernet-1588-Parser) | Parsing raw sniffed L2 ethernet packets into PtPv2-1588 structre and converting to ToD, and writing them back to the PL. |
-| ✅ DONE | [AXI GPIO Kernel Module](https://github.com/harelgrecht/kr260-linux-roadmap) | Replaced Xilinx GPIO driver with a custom kernel module. Controlled GPIO directly from PL with memory-mapped IO. |
-| ✅ DONE | [AXI UART Lite Driver](https://github.com/harelgrecht/kr260-linux-roadmap) | Polling-based driver to replace the default AXI UART Lite. Exposes `/dev/ttyUART`. Includes user-space C library. |
-| 🛠️ IN-PROGRESS | [Ethernet PHY Expansion](https://github.com/harelgrecht/kr260-linux-roadmap) | Enables extra Ethernet ports by integrating PHYs in PL and modifying DTS. Learning DTS structure and PHY reset flows. |
-| ✅ DONE  | [Real Time Patch](https://github.com/harelgrecht/kr260-linux-roadmap) | Learn and enable Real Time Patch to the Zynq UltraScale+ BSP. |
-| ✅ DONE  | [ToFGuard-U5](https://github.com/harelgrecht/STM32u5_ToF_Alarm) | Multi-task FreeRTOS app on STM32, fusing I2C & ToF optic sensor data using a thread-safe mutex. |
-| 🛠️ IN-PROGRESS | [Network Monitor & FireWall]() | Kernel module to filter network packets by user request using netfilter and procfs. |
+| Project | Description | Tech Stack |
+| :--- | :--- | :--- |
+| **[Zynq Custom RootFS](https://github.com/harelgrecht/zynq-custom-rootfs)** | Custom-built Ubuntu-based root filesystem for Zynq-7000, including bootloader configuration. | `U-Boot` `RootFS` `Zynq-7000` |
+| **[Kria KR260 BSP](https://github.com/harelgrecht/kria-bsp)** | Board Support Package for Xilinx Kria KR260, utilizing PetaLinux tools. | `PetaLinux` `Yocto` `KR260` |
+| **[Real-Time Linux Patch](https://github.com/harelgrecht/linux-rt-patch)** | Implementation and configuration of `PREEMPT_RT` patch on kernel 6.12 for deterministic latency. | `Kernel` `Real-Time` `Patching` |
 
+## 🔌 Linux Kernel Modules
+*Custom drivers written in C for direct hardware interaction.*
+* **[Network Monitor Firewall](https://github.com/harelgrecht/network-monitor-firewall)** - A kernel-space network packet filter and monitor hook.
+* **[AXI GPIO Driver](https://github.com/harelgrecht/axi-gpio-driver)** - Character device driver for memory-mapped AXI GPIO IP.
+* **[AXI UART Lite](https://github.com/harelgrecht/axi-uartlite-driver)** - Serial communication driver handling interrupts and circualr buffers.
+
+## 📡 Embedded Applications
+*Userspace networking and high-performance logic.*
+
+* **[Ethernet Packet Processor](https://github.com/harelgrecht/Ethernet-Packet-Processor)** - High-performance raw socket handling and packet inspection engine.
+* **[Ethernet 1588 Parser](https://github.com/harelgrecht/Ethernet-1588-Parser)** - IEEE 1588 PTP protocol parser for precise time synchronization.
+* **[STM32 ToF Alarm](https://github.com/harelgrecht/STM32u5_ToF_Alarm)** - Bare-metal application utilizing Time-of-Flight sensors on STM32U5.
+
+---
+
+### 📚 Knowledge Base
+I document my learning process. Check out my guides:
+* [Embedded Linux Guides](https://github.com/harelgrecht/Linux-BSP/tree/main/Guides) - Collections of tutorials on Kernel modules, TFTP boot, and Device Trees.
 
 ---
 
@@ -43,5 +57,6 @@ Welcome! This repo tracks my personal journey to become a Linux kernel and embed
 **Harel**  
 Linux BSP & Embedded Software Developer in Progress  
 ➡️ [GitHub](https://github.com/harelgrecht)  
+➡️ [Linkedin]()  
 
 ---

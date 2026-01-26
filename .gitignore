@@ -3,8 +3,7 @@
 *.iso
 *.wic
 *.sdcard
-
-RealTimePatch/patch-6.12.28-rt10.patch.gz
+RealTimePatch/
 ZynqBSP/zynqUbuntu/VivadoZynqUbuntu
 
 ZynqMpBSP/kriaBSP/
