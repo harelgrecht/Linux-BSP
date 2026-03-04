@@ -12,7 +12,7 @@ I specialize in bringing hardware to life using **Embedded Linux**. My work rang
 | :--- | :--- | :--- |
 | **[Zynq Custom RootFS](https://github.com/harelgrecht/zynq-custom-rootfs)** | Custom-built Ubuntu-based root filesystem for Zynq-7000, including bootloader configuration. | `U-Boot` `RootFS` `Zynq-7000` |
 | **[Kria KR260 BSP](https://github.com/harelgrecht/kria-bsp)** | Board Support Package for Xilinx Kria KR260, utilizing PetaLinux tools. | `PetaLinux` `Yocto` `KR260` |
-| **[Real-Time Linux Patch](https://github.com/harelgrecht/linux-rt-patch)** | Implementation and configuration of `PREEMPT_RT` patch on kernel 6.12 for deterministic latency. | `Kernel` `Real-Time` `Patching` |
+| **[Real-Time Linux Patch]([https://github.com/harelgrecht/Linux-BSP/tree/main/Guides](https://github.com/harelgrecht/Linux-BSP/blob/main/Guides/RealTimePatchGuide.md))** | Implementation and configuration of `PREEMPT_RT` patch on kernel 6.12 for deterministic latency. | `Kernel` `Real-Time` `Patching` |
 
 ## 🔌 Linux Kernel Modules
 *Custom drivers written in C for direct hardware interaction.*
