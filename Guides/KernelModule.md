@@ -53,34 +53,6 @@ This guide covers the entire process of creating, building, and flashing a PetaL
    There are 2 options:\
    1 - Flashing the whole OS to the SDcard and flash memory.\
    2 - Copy using SCP and Load Kernel Modules.\
-   3 - Using TFTP Boot to Load Kernel and Modules.
-
-
-
-## Using TFTP Boot to Load Kernel and Modules
-
-### Setup TFTP Boot
-
-1. **Set up the network parameters in U-Boot:**
-   ```bash
-   setenv ethact eth1 # Set active Ethernet interface
-   setenv ipaddr 192.168.0.111 # Board IP
-   setenv serverip 192.168.0.110 # TFTP server IP
-   ```
-2. **Download and flash the image from the TFTP server:**
-   ```bash
-   tftpboot 0x10000000 /path/to/image.ub
-   fatwrite usb 0:1 0x10000000 image.ub 0x${filesize}
-   ```
-3. **Verify network connectivity:**
-   ```bash
-   ping 192.168.0.110
-   ```
-4. **Load the image and boot:**
-   ```bash
-   time fatload usb 0:1 0x10000000 image.ub
-   bootm
-   ```
 
 ### Copy and Load Kernel Modules
 

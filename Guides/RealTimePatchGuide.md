@@ -1,5 +1,8 @@
 # 🛠️ PREEMPT-RT Patch Guide for PetaLinux 2023.1 on Kria KR260
 
+patch-6.12.28-rt10.patch.gz
+
+
 ## ✅ Step-by-Step Instructions
 
 ### 1. Check Current Kernel Version

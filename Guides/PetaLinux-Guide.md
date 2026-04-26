@@ -166,6 +166,10 @@ For KR260 Starter Kit with BSP:
 petalinux-package --wic --images-dir images/linux/ --bootfiles "ramdisk.cpio.gz.u-boot,boot.scr,Image,system.dtb,system-zynqmp-sck-kr-g-revB.dtb,system.bit" --disk-name "sda"
 ```
 
+For ZYNQ7000:
+```bash
+petalinux-package --wic --bootfiles "BOOT.BIN image.ub system.dtb boot.scr" --rootfs-file ./images/linux/rootfs.tar.gz
+```
 ---
 
 ## Programming the Hardware

@@ -3,10 +3,46 @@
 *.iso
 *.wic
 *.sdcard
+*.bsp
+.vscode-ctags
 RealTimePatch/
 ZynqBSP/zynqUbuntu/VivadoZynqUbuntu
+
+# Explicit: never track the 2GB BSP archive
+ZynqMpBSP/zynqmp.bsp
 
 ZynqMpBSP/kriaBSP/
 ZynqMpBSP/kriaBSP/KriaDocs
 ZynqMpBSP/kriaBSP/KriaBSP.bsp
 Guides/emmc_program.md
+# Yocto repo tree - third-party layers, too large and not our code
+ZynqMpBSP/KR260_Yocto/
+
+# Binary release artifacts (boot images, rootfs, kernel tarballs)
+AutoBurn/AutoBurnMUST/mustV3.1/
+AutoBurn/AutoBurnDust/dustV*/
+*.tgz
+*.cpio.gz*
+*.elf
+*.bit
+*.BIN
+image.ub
+
+# Vivado generated / cache directories
+*.cache/
+*.gen/
+*.ip_user_files/
+*.sim/
+*.runs/
+*.sdk/
+*.hw/
+*.xpr.bak
+*.jou
+*.log
+
+# Vitis auto-generated BSP platform libraries
+ZynqBSP/zynqVitis/*/plat/
+
+# Binary documentation files
+*.pdf
+*.xlsx
