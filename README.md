@@ -1,62 +1,83 @@
-# Hi there, I'm Harel! 👋
-🚀 **Embedded Linux Developer** | Board Support Packages (BSP) | Kernel Modules
+# Linux BSP
 
-I specialize in bringing hardware to life using **Embedded Linux**. My work ranges from building custom Yocto/PetaLinux distributions to writing kernel drivers and real-time userspace applications.
-
----
-
-## 🐧 Linux BSP & Infrastructure
-*Core infrastructure projects for Zynq-7000 and Kria SOM platforms.*
-
-| Project | Description | Tech Stack |
-| :--- | :--- | :--- |
-| **[Zynq Custom RootFS](https://github.com/harelgrecht/zynq-custom-rootfs)** | Custom-built Ubuntu-based root filesystem for Zynq-7000, including bootloader configuration. | `U-Boot` `RootFS` `Zynq-7000` |
-| **[Kria KR260 BSP](https://github.com/harelgrecht/kria-bsp)** | Board Support Package for Xilinx Kria KR260, utilizing PetaLinux tools. | `PetaLinux` `Yocto` `KR260` |
-| **[Real-Time Linux Patch]([https://github.com/harelgrecht/Linux-BSP/tree/main/Guides](https://github.com/harelgrecht/Linux-BSP/blob/main/Guides/RealTimePatchGuide.md))** | Implementation and configuration of `PREEMPT_RT` patch on kernel 6.12 for deterministic latency. | `Kernel` `Real-Time` `Patching` |
-
-## 🔌 Linux Kernel Modules
-*Custom drivers written in C for direct hardware interaction.*
-* **[Network Monitor Firewall](https://github.com/harelgrecht/network-monitor-firewall)** - A kernel-space network packet filter and monitor hook.
-* **[AXI GPIO Driver](https://github.com/harelgrecht/axi-gpio-driver)** - Character device driver for memory-mapped AXI GPIO IP.
-* **[AXI UART Lite](https://github.com/harelgrecht/axi-uartlite-driver)** - Serial communication driver handling interrupts and circualr buffers.
-
-## 📡 Embedded Applications
-*Userspace networking and high-performance logic.*
-
-* **[Ethernet Packet Processor](https://github.com/harelgrecht/Ethernet-Packet-Processor)** - High-performance raw socket handling and packet inspection engine.
-* **[Ethernet 1588 Parser](https://github.com/harelgrecht/Ethernet-1588-Parser)** - IEEE 1588 PTP protocol parser for precise time synchronization.
-* **[STM32 ToF Alarm](https://github.com/harelgrecht/STM32u5_ToF_Alarm)** - Bare-metal application utilizing Time-of-Flight sensors on STM32U5.
+Board Support Package, kernel drivers, and platform automation work for **Zynq-7000** and **Kria KR260 (Zynq UltraScale+)** platforms.
 
 ---
 
-### 📚 Knowledge Base
-I document my learning process. Check out my guides:
-* [Embedded Linux Guides](https://github.com/harelgrecht/Linux-BSP/tree/main/Guides) - Collections of tutorials on Kernel modules, TFTP boot, and Device Trees.
+## KernelModules
+
+Custom Linux kernel drivers written in C for direct hardware interaction.
+
+| Driver | Description |
+|---|---|
+| [axi-gpio-kernel-driver](./KernelModules/axi-gpio-kernel-driver) | Character device driver for memory-mapped AXI GPIO IP core |
+| [axi-uartlite-kernel-driver](./KernelModules/axi-uartlite-kernel-driver) | Serial driver with interrupt handling and circular buffer |
+| [network-monitor-firewall](./KernelModules/network-monitor-firewall) | Kernel-space netfilter hook for packet monitoring and filtering |
 
 ---
 
-## 🧰 Tools Used
+## AutoBurn
 
-- PetaLinux, Yocto
-- Vivado + Vitis
-- Linux Kernel Module APIs
-- Git, GitHub
-- STM32CubeIDE, FreeRTOS
+Automated board programming scripts for flashing and provisioning embedded targets over TFTP and eMMC.
 
-## 🪛 Hardware Used
-
-- Kria KR260 Starter Kit
-- STM32U5-NUCLEO
-- Digilent Arty-Z7
-- Custom PCB Boards including ZYNQ7000
+| Platform | Description |
+|---|---|
+| [AutoBurnMUST](./AutoBurn/AutoBurnMUST) | TFTP boot, flash, and eMMC programming pipeline for Kria KR260 |
+| [AutoBurnDust](./AutoBurn/AutoBurnDust) | Adapted automation suite for the DUST board platform |
 
 ---
 
-## 💼 Author
+## ZynqBSP
 
-**Harel**  
-Linux BSP & Embedded Software Developer in Progress  
-➡️ [GitHub](https://github.com/harelgrecht)  
-➡️ [Linkedin]()  
+BSP and build configurations for Zynq-7000 targets.
+
+| Folder | Description |
+|---|---|
+| [vivadoZynq](./ZynqBSP/vivadoZynq) | Vivado block design project (AXI DMA + GPIO) |
+| [zynqPLNX](./ZynqBSP/zynqPLNX) | PetaLinux project configuration |
+| [zynqVitis](./ZynqBSP/zynqVitis) | Vitis software platform workspace |
 
 ---
+
+## ZynqMpBSP
+
+BSP and platform work for Kria KR260 (Zynq UltraScale+).
+
+| Folder | Description |
+|---|---|
+| [KR260_Yocto](./ZynqMpBSP/KR260_Yocto) | Custom Yocto layer configuration for Kria KR260 |
+| [Hardening](./ZynqMpBSP/Hardening) | Linux security hardening scripts and configuration |
+| [KriaDocs](./ZynqMpBSP/KriaDocs) | Platform references and pin constraint files |
+
+---
+
+## Guides
+
+Step-by-step technical guides for platform bringup and tooling.
+
+| Guide | Description |
+|---|---|
+| [PetaLinux-Guide.md](./Guides/PetaLinux-Guide.md) | Full PetaLinux build and configuration walkthrough |
+| [KernelModule.md](./Guides/KernelModule.md) | Writing, building, and loading custom kernel modules |
+| [RealTimePatchGuide.md](./Guides/RealTimePatchGuide.md) | Applying `PREEMPT_RT` patch for deterministic latency on kernel 6.12 |
+| [tftp.md](./Guides/tftp.md) | TFTP server setup for network booting |
+
+---
+
+## Tech Stack
+
+| Area | Technologies |
+|---|---|
+| Languages | C, Bash |
+| Build Systems | PetaLinux, Yocto, Make |
+| Kernel APIs | Netfilter, Character devices, Platform drivers, IRQ |
+| Platforms | Kria KR260, Zynq-7000, Custom PCBs |
+| Tools | Vivado, Vitis, U-Boot, TFTP, eMMC |
+
+---
+
+## Hardware
+
+- Kria KR260 Starter Kit (Zynq UltraScale+)
+- Digilent Arty-Z7 (Zynq-7000)
+- Custom PCB boards based on Zynq-7000
