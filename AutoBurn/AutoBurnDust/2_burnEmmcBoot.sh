@@ -17,32 +17,28 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 # Static configuration – always required
 # ---------------------------------------------------------------------------
-# TODO: DUST – set the correct board IP address
-boardIp="192.168.0.20"
-# TODO: DUST – set the correct SSH username for the ramdisk
-boardUser="petalinux"
-# TODO: DUST – set the SSH password (leave empty for SSH key auth)
-boardPassword="root"
-# TODO: DUST – set the sudo password on the board (leave empty if NOPASSWD)
-boardSudoPassword="root"
+boardIp="192.168.0.10"
+boardUser="dust"
+boardPassword="root"     # SSH password – leave empty to use SSH key auth
+boardSudoPassword="root" # sudo password on the board – leave empty if NOPASSWD
 
 # Destination directory on the board for uploaded files
-boardUploadDir="/home/petalinux"
+boardUploadDir="/home/dust"
 
-# eMMC block device on the board
-# TODO: DUST – verify eMMC device name (check with: lsblk on the board)
-emmcDevice="/dev/mmcblk0"
+# eMMC block device on the board (DUST: eMMC is mmcblk1, SD card is mmcblk0)
+emmcDevice="/dev/mmcblk1"
 emmcBootPart="${emmcDevice}p1"
 # NOTE: p2 (root partition) is formatted and populated by 3_burnEmmcRootfs.sh
 
 # Mount point for boot partition on the board
-boardBootMount="/home/petalinux/bootFiles"
+boardBootMount="/home/dust/bootFiles"
 
 # ---------------------------------------------------------------------------
 # Default file paths (used when --ver is NOT supplied)
 # ---------------------------------------------------------------------------
 imageUbPath="./image.ub"
 systemBitPath="./system.bit"
+extraEnvPath="./uboot.env" 
 
 # Base directory containing version subdirectories
 versionsBaseDir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -140,6 +136,8 @@ if [[ -n "${selectedVer}" ]]; then
     fi
     imageUbPath="${versionDir}/image.ub"
     systemBitPath="${versionDir}/system.bit"
+    extraEnvPath="${versionDir}/uboot.env"
+
 fi
 
 # ---------------------------------------------------------------------------
@@ -148,7 +146,7 @@ fi
 logBanner "DUST eMMC Programmer – Step 2/3: Burn Boot Partition${selectedVer:+ [${selectedVer}]}"
 
 missingFiles=0
-for filePath in "${imageUbPath}" "${systemBitPath}"; do
+for filePath in "${imageUbPath}" "${systemBitPath}" "${extraEnvPath}"; do
     if [[ ! -f "${filePath}" ]]; then
         logError "Required file not found: '${filePath}'"
         missingFiles=$((missingFiles + 1))
@@ -168,13 +166,15 @@ fi
 logInfo "Version    : ${selectedVer:-<default paths>}"
 logInfo "image.ub   : ${imageUbPath}"
 logInfo "system.bit : ${systemBitPath}"
+logInfo "uboot.env  : ${extraEnvPath}"
+
 
 # ---------------------------------------------------------------------------
 # Step 2 – Copy source files to the board
 # ---------------------------------------------------------------------------
 cleanBoardHostKey
 logInfo "Transferring image.ub and system.bit to ${boardUser}@${boardIp}:${boardUploadDir}/ ..."
-scpCmd "${imageUbPath}" "${systemBitPath}" "${boardUser}@${boardIp}:${boardUploadDir}/"
+scpCmd "${imageUbPath}" "${systemBitPath}" "${extraEnvPath}" "${boardUser}@${boardIp}:${boardUploadDir}/"
 logInfo "Transfer complete."
 
 # ---------------------------------------------------------------------------
@@ -204,6 +204,9 @@ echo "[board] Unmounting boot partition if mounted ..."
 runSudo umount "\${emmcBootPart}" 2>/dev/null || true
 
 echo "[board] Repartitioning \${emmcDev} ..."
+# d 1  -> delete existing p1
+# n p 1 <start> +1G -> 1 GiB FAT32 boot partition
+# w -> write
 runSudo fdisk "\${emmcDev}" << 'FDISK_CMDS'
 d
 1
@@ -221,7 +224,7 @@ runSudo partprobe "\${emmcDev}" 2>/dev/null || runSudo blockdev --rereadpt "\${e
 sleep 2
 
 echo "[board] Formatting boot partition (p1) as FAT32 ..."
-runSudo mkfs.vfat -F 32 -n "boot-firmware" "\${emmcBootPart}"
+runSudo mkfs.vfat -F 32 -n "boot" "\${emmcBootPart}"
 
 sync
 
@@ -232,6 +235,7 @@ runSudo mount "\${emmcBootPart}" "\${bootMount}"
 echo "[board] Copying image.ub and system.bit to boot partition ..."
 runSudo mv "\${uploadDir}/image.ub"    "\${bootMount}/"
 runSudo mv "\${uploadDir}/system.bit"  "\${bootMount}/"
+runSudo mv "\${uploadDir}/uboot.env"   "\${bootMount}/"
 
 echo "[board] Syncing ..."
 sync

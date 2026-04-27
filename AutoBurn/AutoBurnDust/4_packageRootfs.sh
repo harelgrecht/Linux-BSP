@@ -22,9 +22,9 @@ set -euo pipefail
 # Static configuration – always required
 # ---------------------------------------------------------------------------
 # TODO: DUST – set the correct board IP address
-boardIp="192.168.0.20"
+boardIp="192.168.0.10"
 # TODO: DUST – set the correct SSH username for the ramdisk
-boardUser="petalinux"
+boardUser="dust"
 # TODO: DUST – set the SSH password (leave empty for SSH key auth)
 boardPassword="root"
 # TODO: DUST – set the sudo password on the board (leave empty if NOPASSWD)

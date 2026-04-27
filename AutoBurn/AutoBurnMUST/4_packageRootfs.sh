@@ -29,7 +29,7 @@ boardPassword="root"      # SSH password – leave empty to use SSH key auth
 boardSudoPassword="root"  # sudo password on the board – leave empty if NOPASSWD
 
 # eMMC root partition to package
-emmcRootPart="/dev/mmcblk0p2"
+emmcRootPart="/dev/mmcblk1p2"
 
 # Temporary mount point on the board
 boardMountPoint="/mnt/root"

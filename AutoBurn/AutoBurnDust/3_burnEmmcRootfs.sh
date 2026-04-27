@@ -20,25 +20,20 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 # Static configuration – always required
 # ---------------------------------------------------------------------------
-# TODO: DUST – set the correct board IP address
-boardIp="192.168.0.20"
-# TODO: DUST – set the correct SSH username for the ramdisk
-boardUser="petalinux"
-# TODO: DUST – set the SSH password (leave empty for SSH key auth)
-boardPassword="root"
-# TODO: DUST – set the sudo password on the board (leave empty if NOPASSWD)
-boardSudoPassword="root"
+boardIp="192.168.0.10"
+boardUser="dust"
+boardPassword="root"     # SSH password – leave empty to use SSH key auth
+boardSudoPassword="root" # sudo password on the board – leave empty if NOPASSWD
 
 # Destination directory on the board for uploaded files
-boardUploadDir="/home/petalinux"
+boardUploadDir="/home/dust"
 
 # eMMC root partition on the board
-# TODO: DUST – verify eMMC device name (check with: lsblk on the board)
-emmcRootPart="/dev/mmcblk0p2"
-emmcDevice="/dev/mmcblk0"
+emmcDevice="/dev/mmcblk1"
+emmcRootPart="${emmcDevice}p2"
 
 # Mount point for root partition on the board
-boardRootMount="/home/petalinux/rootFiles"
+boardRootMount="/home/dust/rootFiles"
 
 # ---------------------------------------------------------------------------
 # Default file paths (used when --ver is NOT supplied)
@@ -269,7 +264,7 @@ echo "[board] Mounting root partition at \${rootMount} ..."
 runSudo mkdir -p "\${rootMount}"
 runSudo mount "\${rootPart}" "\${rootMount}"
 
-echo "[board] Extracting rootfs – this will take a while ..."
+echo "[board] Extracting Ubuntu rootfs – this will take a while ..."
 runSudo tar -xzpf "\${rootfsTar}" -C "\${rootMount}"
 sync
 echo "[board] Rootfs extraction complete."
@@ -290,9 +285,9 @@ runSudo umount "\${rootMount}"
 echo "[board] Root partition unmounted. eMMC rootfs programming complete."
 EOF
 
-logBanner "Rootfs successfully written to eMMC!"
+logBanner "Ubuntu rootfs successfully written to eMMC!"
 logInfo "Summary of completed steps:"
 logInfo "  1. QSPI flash programmed with BOOT.BIN        (1_burnFlash.sh)"
 logInfo "  2. eMMC boot partition programmed              (2_burnEmmcBoot.sh)"
 logInfo "  3. eMMC root partition populated with rootfs   (3_burnEmmcRootfs.sh)"
-logWarn "Power-cycle the board and switch boot mode to eMMC to boot."
+logWarn "Power-cycle the board and switch boot mode to eMMC to boot Ubuntu."
