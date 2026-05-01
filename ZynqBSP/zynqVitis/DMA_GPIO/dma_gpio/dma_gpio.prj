@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ASCII"?>
+<sdkproject:SdkProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sdkproject="http://www.xilinx.com/sdkproject" name="dma_gpio" location="/home/harel/Desktop/Projects/Linux-BSP/ZynqBSP/zynqVitis/DMA_GPIO/dma_gpio" platform="/home/harel/Desktop/Projects/Linux-BSP/ZynqBSP/zynqVitis/DMA_GPIO/plat/export/plat/plat.xpfm" platformUID="xilinx:arty-z7-20::0.0(custom)" systemProject="dma_gpio_system" sysConfig="plat" runtime="C/C++" cpu="standalone_domain" cpuInstance="ps7_cortexa9_0" os="standalone" mssSignature="c505d370dd9e35aba0388b25e7cc0a9f">
+  <configuration name="Debug" id="xilinx.gnu.armv7.exe.debug.1195118252">
+    <configBuildOptions xsi:type="sdkproject:SdkOptions"/>
+    <lastBuildOptions xsi:type="sdkproject:SdkOptions"/>
+  </configuration>
+  <configuration name="Release" id="xilinx.gnu.armv7.exe.release.116517631" dirty="true">
+    <configBuildOptions xsi:type="sdkproject:SdkOptions"/>
+  </configuration>
+  <template appTemplateName="hello_world"/>
+</sdkproject:SdkProject>

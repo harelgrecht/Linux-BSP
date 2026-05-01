@@ -46,3 +46,6 @@ ZynqBSP/zynqVitis/*/plat/
 # Binary documentation files
 *.pdf
 *.xlsx
+
+
+Guides/emmc_program

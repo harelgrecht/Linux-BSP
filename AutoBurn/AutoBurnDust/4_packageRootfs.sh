@@ -21,21 +21,20 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 # Static configuration – always required
 # ---------------------------------------------------------------------------
-# TODO: DUST – set the correct board IP address
+# set the correct board IP address
 boardIp="192.168.0.10"
-# TODO: DUST – set the correct SSH username for the ramdisk
+# set the correct SSH username for the ramdisk
 boardUser="dust"
-# TODO: DUST – set the SSH password (leave empty for SSH key auth)
+# set the SSH password (leave empty for SSH key auth)
 boardPassword="root"
-# TODO: DUST – set the sudo password on the board (leave empty if NOPASSWD)
+# set the sudo password on the board (leave empty if NOPASSWD)
 boardSudoPassword="root"
 
-# eMMC root partition to package
-# TODO: DUST – verify eMMC device name (check with: lsblk on the board)
-emmcRootPart="/dev/mmcblk0p2"
+# eMMC root partition to package (DUST: eMMC is mmcblk1, so root is mmcblk1p2)
+emmcRootPart="/dev/mmcblk1p2"
 
 # Temporary mount point on the board
-boardMountPoint="/mnt/root"
+boardMountPoint="/mnt/rootFS"
 
 # Temporary tarball path on the board (in /dev/shm = RAM, avoids eMMC writes)
 boardTmpTar="/dev/shm/rootfs-package-tmp.tar.gz"
@@ -108,6 +107,25 @@ cleanBoardHostKey() {
     ssh-keygen -f "${HOME}/.ssh/known_hosts" -R "${boardIp}" 2>/dev/null || true
 }
 
+checkBoardReachable() {
+    logInfo "Checking board is reachable at ${boardIp} ..."
+    if ! ping -c 1 -W 3 "${boardIp}" &>/dev/null; then
+        logError "Board at ${boardIp} is NOT reachable."
+        logError "  → Is the board running the ramdisk? (U-Boot: run load_ramdisk_tftp)"
+        logError "  → Is the Ethernet cable connected?"
+        logError "  → Is your host on the same subnet? (ip addr show)"
+        exit 1
+    fi
+    logInfo "Board reachable. Testing SSH ..."
+    if ! sshCmd true 2>/dev/null; then
+        logError "SSH to ${boardUser}@${boardIp} failed."
+        logError "  → Check boardUser (\"${boardUser}\") and boardPassword (\"${boardPassword}\")"
+        logError "  → Is sshpass installed? sudo apt install sshpass"
+        exit 1
+    fi
+    logInfo "SSH connection OK."
+}
+
 # ---------------------------------------------------------------------------
 # Argument parsing
 # ---------------------------------------------------------------------------
@@ -170,10 +188,14 @@ logInfo "Output file     : ${outputPath}"
 # Step 1 – Connect to the board and package the rootfs
 # ---------------------------------------------------------------------------
 cleanBoardHostKey
+checkBoardReachable
 
-logInfo "Connecting to board ..."
+# ---------------------------------------------------------------------------
+# Step 1 – Package the rootfs on the board
+# ---------------------------------------------------------------------------
+logInfo "Starting rootfs packaging on board ..."
 
-sshCmd bash -s << EOF
+sshCmd bash -s << ENDSSH
 set -euo pipefail
 
 rootPart="${emmcRootPart}"
@@ -189,15 +211,22 @@ runSudo() {
     fi
 }
 
-echo "[board] Unmounting partition if already mounted ..."
+runSudo rm -f "\${tmpTar}" 2>/dev/null || true
+
+echo "[board] Unmounting \${rootPart} if already mounted ..."
 runSudo umount "\${rootPart}" 2>/dev/null || true
 
 echo "[board] Mounting \${rootPart} at \${mountPoint} ..."
 runSudo mkdir -p "\${mountPoint}"
-runSudo mount "\${rootPart}" "\${mountPoint}"
+if ! runSudo mount "\${rootPart}" "\${mountPoint}"; then
+    echo "[board] ERROR: Could not mount \${rootPart}."
+    echo "[board]        Is the eMMC programmed? Check: lsblk"
+    exit 1
+fi
 
 echo "[board] Creating rootfs tarball in /dev/shm (RAM) ..."
-echo "[board] This may take a few minutes ..."
+echo "[board] Progress shown every 3 seconds ..."
+
 runSudo tar \
     -C "\${mountPoint}" \
     --numeric-owner \
@@ -206,28 +235,47 @@ runSudo tar \
     --exclude=./dev \
     --exclude=./run \
     --exclude=./tmp \
-    -czpfv "\${tmpTar}" \
-    .
+    -czpf "\${tmpTar}" \
+    . &
+TAR_PID=\$!
 
-echo "[board] Rootfs packaged successfully."
+while kill -0 \${TAR_PID} 2>/dev/null; do
+    SIZE=\$(du -sh "\${tmpTar}" 2>/dev/null | cut -f1 || echo "...")
+    echo -ne "[board] Progress: \${SIZE} written\r"
+    sleep 3
+done
+wait \${TAR_PID}
+TAR_EXIT=\$?
+echo ""
+
+if [[ "\${TAR_EXIT}" -ne 0 ]]; then
+    echo "[board] ERROR: tar failed (exit \${TAR_EXIT}). Check free RAM: free -h"
+    exit 1
+fi
+
 echo "[board] Tarball size: \$(du -sh "\${tmpTar}" | cut -f1)"
 
 echo "[board] Unmounting \${rootPart} ..."
 runSudo umount "\${mountPoint}"
 
-echo "[board] Changing ownership of tarball to user ..."
+echo "[board] Fixing tarball ownership ..."
 runSudo chown \$(id -u):\$(id -g) "\${tmpTar}"
 
 echo "[board] Ready for download."
-EOF
+ENDSSH
 
 # ---------------------------------------------------------------------------
 # Step 2 – Copy the tarball from the board to the host
 # ---------------------------------------------------------------------------
-logInfo "Downloading tarball from board to '${outputPath}' ..."
+logInfo "Downloading tarball from board → '${outputPath}' ..."
 logWarn "This may take several minutes depending on rootfs size and network speed."
 
-scpGetCmd "${boardUser}@${boardIp}:${boardTmpTar}" "${outputPath}"
+if ! scpGetCmd "${boardUser}@${boardIp}:${boardTmpTar}" "${outputPath}"; then
+    logError "SCP download failed."
+    logError "  → Is the board still reachable? (ping ${boardIp})"
+    logError "  → Is ${boardTmpTar} present on the board?"
+    exit 1
+fi
 
 # ---------------------------------------------------------------------------
 # Step 3 – Clean up the temp tarball on the board

@@ -84,24 +84,43 @@ printHelp() {
 sshCmd() {
     if [[ -n "${boardPassword}" ]]; then
         sshpass -p "${boardPassword}" ssh -o StrictHostKeyChecking=no \
-            "${boardUser}@${boardIp}" "$@"
+            -o ConnectTimeout=10 "${boardUser}@${boardIp}" "$@"
     else
-        ssh -o StrictHostKeyChecking=no "${boardUser}@${boardIp}" "$@"
+        ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 "${boardUser}@${boardIp}" "$@"
     fi
 }
 
 scpCmd() {
     if [[ -n "${boardPassword}" ]]; then
-        sshpass -p "${boardPassword}" scp -o StrictHostKeyChecking=no "$@"
+        sshpass -p "${boardPassword}" scp -o StrictHostKeyChecking=no \
+            -o ConnectTimeout=10 "$@"
     else
-        scp -o StrictHostKeyChecking=no "$@"
+        scp -o StrictHostKeyChecking=no -o ConnectTimeout=10 "$@"
     fi
 }
 
-# Remove any stale host key for the board (ramdisk regenerates keys on every boot)
 cleanBoardHostKey() {
     logInfo "Removing stale known_hosts entry for ${boardIp} ..."
     ssh-keygen -f "${HOME}/.ssh/known_hosts" -R "${boardIp}" 2>/dev/null || true
+}
+
+checkBoardReachable() {
+    logInfo "Checking board is reachable at ${boardIp} ..."
+    if ! ping -c 1 -W 3 "${boardIp}" &>/dev/null; then
+        logError "Board at ${boardIp} is NOT reachable."
+        logError "  → Is the board running the ramdisk? (U-Boot: run load_ramdisk_tftp)"
+        logError "  → Is the Ethernet cable connected?"
+        logError "  → Is your host on the same subnet? (ip addr show)"
+        exit 1
+    fi
+    logInfo "Board reachable. Testing SSH ..."
+    if ! sshCmd true 2>/dev/null; then
+        logError "SSH to ${boardUser}@${boardIp} failed."
+        logError "  → Check boardUser (\"${boardUser}\") and boardPassword (\"${boardPassword}\")"
+        logError "  → Is sshpass installed? sudo apt install sshpass"
+        exit 1
+    fi
+    logInfo "SSH connection OK."
 }
 
 # ---------------------------------------------------------------------------
@@ -198,6 +217,7 @@ logInfo "Modules      : ${modulesTarPath:-<none>}"
 # Step 2 – Copy files to the board
 # ---------------------------------------------------------------------------
 cleanBoardHostKey
+checkBoardReachable
 logInfo "Transferring rootfs tarball to ${boardUser}@${boardIp}:${boardUploadDir}/ ..."
 logWarn "This may take several minutes depending on file size and network speed."
 scpCmd "${rootfsTarPath}" "${boardUser}@${boardIp}:${boardUploadDir}/"

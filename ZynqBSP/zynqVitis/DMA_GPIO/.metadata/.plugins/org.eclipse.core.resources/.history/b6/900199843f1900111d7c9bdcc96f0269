@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include "platform.h"
+#include "xil_printf.h"
+#include "xparameters.h"
+#include "xaxidma.h"
+
+int main()
+{
+    init_platform();
+
+    print("Hello World\n\r");
+    XAxiDma dmaInstance;
+    XAxiDma_Config *dmaConfig = XAxiDma_LookupConfig(DEVICE_ID);
+    XAxiDma_CfgInitialize(&dmaInstance, dmaConfig);
+
+	while(1){
+		Status = XAxiDma_SimpleTransfer(&AxiDma,(UINTPTR)RX_BUFFER_BASE,MAX_PKT_LEN, XAXIDMA_DEVICE_TO_DMA);
+		if (Status != XST_SUCCESS) {
+			printf("XFER failed %d\r\n", Status);
+			return XST_FAILURE;
+		}
+		while ((XAxiDma_Busy(&AxiDma,XAXIDMA_DEVICE_TO_DMA))){
+			/* Wait */
+		}
+		Xil_DCacheFlushRange((UINTPTR)RxBufferPtr, MAX_PKT_LEN);
+	}
+
+
+
+
+    cleanup_platform();
+    return 0;
+}

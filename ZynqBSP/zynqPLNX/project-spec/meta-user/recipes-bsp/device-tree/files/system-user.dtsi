@@ -1,0 +1,8 @@
+/include/ "system-conf.dtsi"
+/ {
+};
+
+&axi_dma_axi_dma_0 {
+    compatible = "harel,dmaDriver";
+};
+
